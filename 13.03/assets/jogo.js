@@ -7,38 +7,36 @@ class Personagem {
         this.energia = energia;
     }
     atacar(alvo, habilidade) {
-        // verificar se tem mana/energia
+        //veriificar se tem mana e energia
         if (this.mana >= habilidade.custo
             && this.energia >= habilidade.energia) {
-            // Dano no alvo
+            // dano no alvo
             alvo.hp -= habilidade.dano;
-            // Debitar mana
-            if(habilidade.custo > 0){
+            // debitar mana
+            if (habilidade.custo > 0) {
                 this.mana -= habilidade.custo;
                 this.energia += 50;
-
             }
-            // Esvaziar energia
+            // esvaziar energia
             if (habilidade.energia > 0) {
                 this.energia = 0;
             }
-
             //retornar mensagem
             return `${this.nome} usou ${habilidade.nome}`;
         } else {
-            return ` Sem mana para usar $(habilidade.nome)`;
+            return ` Sem mana para usar ${habilidade.nome}`;
         }
-        {
-            boss_atacar(alvo) }
-            if(this.energia == 100) {
-                alvo.hp -= 15;
-                this.energia = 0;
-            } else {
-                this.energia += 50;
-            }
-
-
     }
+    boss_atacar(alvo) {
+        if (this.energia == 100) {
+            alvo.hp -= 15;
+            this.energia = 0;
+
+        } else {
+            this.energia += 50;
+        }
+    };
+
 }
 
 class Habilidade {
@@ -49,41 +47,48 @@ class Habilidade {
         this.custo = custo;
         this.energia = energia;
     }
+
 }
 
-// Instanciar (CRIAR) os objetos
-let hero = new Personagem("Aragon", "O Herói", 100, 100, 0);
-let boss = new Personagem("Radagon", "Elden Beast", 100, 0, 50);
+//instaciar (criar) os objetos
+let hero = new Personagem("Less", "Herói", 100, 100, 0);
+let boss = new Personagem("Truco", "Boss", 100, 0, 50);
 
-// Preencher Status
-document.getElementById("nome-heroi").textContent =`${hero.nome}`;
-document.getElementById("titulo-heroi").textContent =`⚔️${hero.titulo}`;
-document.getElementById("nome-boss").textContent =`${boss.nome}`;
-document.getElementById("titulo-boss").textContent =`⚔️${boss.titulo}`;
-    const atualizarInterface = (mensagem) => {
-        //barras heroi
-        document.getElementById("hp-hero").value = hero.hp;
-        document.getElementById("mp-hero").value = hero.mana;
-        document.getElementById("en-hero").value = hero.energia;
-        // barras boss
-         document.getElementById("hp-boss").value = hero.hp;
-         document.getElementById("mp-boss").value = hero.energia;
-    }
-// Criar habilidades e botões
+document.getElementById("nome-heroi").textContent = `${hero.nome}`;
+document.getElementById("titulo-heroi").textContent = `⚔️ ${hero.titulo}`;
+
+document.getElementById("nome-boss").textContent = `${boss.nome}`;
+document.getElementById("titulo-boss").textContent = `💀 ${boss.titulo}`;
+
+const atualizarInterface = (mensagem) => {
+    console.log(hero.mana)
+    document.getElementById("hp-heroi").value = hero.hp;
+    document.getElementById("mp-heroi").value = hero.mana;
+    document.getElementById("en-heroi").value = hero.energia;
+    //barras boss
+    document.getElementById("hp-boss").value = boss.hp;
+    document.getElementById("en-boss").value = boss.energia;
+    //turnos
+    document.getElementById("log-primario").textContent = mensagem;
+}
+
+
+//criar habilidade e botões
 let container = document.getElementById("controles");
 let listaHabilidades = [
-    new Habilidade(1, "attack", 4, 0, 0),
-    new Habilidade(2, "skill", 8, 10, 0),
-    new Habilidade(3, "ultimate", 15, 0, 100)
+    new Habilidade(1, "Ataque", 4, 0, 0),
+    new Habilidade(2, "Skill", 8, 10, 0),
+    new Habilidade(3, "Ultimate", 15, 0, 100)
 ];
+
 listaHabilidades.forEach(hab => {
     let btn = document.createElement("button");
     btn.innerText = hab.nome;
-    btn.classList.add("btn", "btn-warning");
+    btn.classList.add("btn", "btn-dark");
     container.appendChild(btn);
     btn.onclick = () => {
         let mensagem = hero.atacar(boss, hab);
         atualizarInterface(mensagem);
         boss.boss_atacar(hero);
     }
-});
+}); 
